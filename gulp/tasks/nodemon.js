@@ -1,7 +1,6 @@
 export default function(gulp, plugins, config) {
   const {nodemon} = plugins;
-  const {sources, utils, ENV} = config;
-  const {buildDir, scriptDir} = sources;
+  const {utils, ENV} = config;
   const {addbase} = utils;
 
   return (cb) => {
