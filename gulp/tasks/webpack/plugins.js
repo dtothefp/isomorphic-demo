@@ -1,7 +1,6 @@
 import {join} from 'path';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import webpack from 'webpack';
-import statsPlugin from './stats-plugin';
 import WebpackIsomorphicToolsPlugin from 'webpack-isomorphic-tools/plugin';
 import ismorphicToolsConfig from './webpack-isomorphic-tools';
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(ismorphicToolsConfig);
@@ -69,10 +68,6 @@ export default function(opts) {
 
     if (isMainTask) {
       plugins.push(...commons, webpackIsomorphicToolsPlugin.development(DEBUG));
-    }
-
-    if (shouldRev) {
-      prodPlugins.push(statsPlugin(app));
     }
 
     if (!DEBUG || !TEST) {

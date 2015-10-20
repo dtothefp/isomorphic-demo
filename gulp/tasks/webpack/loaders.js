@@ -64,15 +64,15 @@ export default function(opts) {
       ].join('!');
     }
 
-    cssLoader = ExtractTextPlugin.extract('style-loader', [
-      'css-loader?sourceMap&importLoaders=1&modules&localIdentName=[hash:base64:5]',
-      'postcss-loader'
-    ].join('!'));
-    //cssLoader = [
-      //'style-loader',
+    //cssLoader = ExtractTextPlugin.extract('style-loader', [
       //'css-loader?sourceMap&importLoaders=1&modules&localIdentName=[name]__[local]___[hash:base64:5]',
       //'postcss-loader'
-    //].join('!');
+    //].join('!'));
+    cssLoader = [
+      'style-loader',
+      'css-loader?sourceMap&importLoaders=1&modules&localIdentName=[name]__[local]___[hash:base64:5]',
+      'postcss-loader'
+    ].join('!');
   } else if (SERVER) {
     const mockStylesLoader = join(__dirname, 'server-styles', 'style-collector') + '!css-loader';
     cssLoader = mockStylesLoader;

@@ -1,5 +1,4 @@
 import Express from 'express';
-import Html from '../src/js/helpers/html';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import makeConfig from '../gulp/config';
@@ -64,9 +63,11 @@ export default function({webpackIsomorphicTools, isDev}) {
       webpackIsomorphicTools.refresh();
     }
 
-    const snippetId = req.query.snippetId;
+    const snippetId = req.query.snippetId || 'sample';
+    const userName = process.cwd().split('/')[2];
+
     const componentProps = {
-      userName: 'DFP'
+      userName
     };
 
     assemble.snippets.load([`./src/js/components/${snippetId}.jsx`], {}, componentProps, function (err) {
@@ -74,10 +75,12 @@ export default function({webpackIsomorphicTools, isDev}) {
 
       var page = assemble.pages.getView('pages/index');
       page.render({
+        userName,
         snippetId,
         assets: webpackIsomorphicTools.assets(),
       }, function (err, view) {
         if (err) return next(err);
+
         res.send(view.content);
       });
     });

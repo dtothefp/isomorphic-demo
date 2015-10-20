@@ -42,8 +42,8 @@ module.exports = {
       },
       parser: function(m, options, log) {
         if (m.source) {
-          var regex = /module\.exports = ((.|\n)+);/;
-          //var regex = options.development ? /exports\.locals = ((.|\n)+);/ : /module\.exports = ((.|\n)+);/;
+          //var regex = /module\.exports = ((.|\n)+);/;
+          var regex = options.development ? /exports\.locals = ((.|\n)+);/ : /module\.exports = ((.|\n)+);/;
           var match = m.source.match(regex);
           return match ? JSON.parse(match[1]) : {};
         }

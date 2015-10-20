@@ -4,17 +4,13 @@
 
 #### Get Started
 ```sh
-gulp watch
+gulp watch //dev build `NODE_ENV="development"`
 gulp build
-
 ```
 
 #### Test
 ```sh
 gulp test:integration
-gulp test:e2e # run local server in separate tab
-gulp test:tunnel # run local server in separate tab
-gulp test:tunnel:live # run local server in separate tab
 ```
 
 #### Flags
@@ -43,10 +39,7 @@ gulp test:tunnel:live # run local server in separate tab
 
 ./test
 ├── config
-│   ├── e2e-setup.js # don't touch this
 │   └── karma-index.js # or this
-├── e2e
-│   └── sample-spec.js # end to end tests using Selenium Webdriver
 └── integration
     ├── another-spec.js # integration tests using Karma
     └── sample-spec.js
@@ -66,12 +59,6 @@ gulp test:tunnel:live # run local server in separate tab
     ├── karma
     │   ├── index.js # starts Karma server
     │   └── karma-config.js # imports Webpack config to compile es6 specs in `integration` folder
-    ├── selenium
-    │   ├── index.js
-    │   ├── install.js # installs local Selenium Server see [Test README](https://github.com/HillaryClinton/frontend-boilerplate/tree/master/test/README.md)
-    │   ├── spawn-process.js # spawns WebdriverIO cli to run tests in parallel
-    │   └── wdio-config
-    │       └── index.js # WebdriverIO cli config
     └── webpack
         ├── gather-commonjs-mods.js # utility for ignoring external packages for compiling "backend" bundles from es6 to es5
         ├── index.js # bootstraps the process, starts the watch for `global` and Webpack Dev Server for `main`
