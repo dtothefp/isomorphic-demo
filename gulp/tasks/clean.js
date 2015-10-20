@@ -1,10 +1,11 @@
 export default function(gulp, plugins, config) {
   const {del} = plugins;
   const {sources, utils} = config;
-  const {buildDir} = sources;
+  const {buildDir, srcDir} = sources;
   const {addbase} = utils;
 
   const src = [
+    addbase(srcDir, '**/*-stats.json'),
     addbase(buildDir)
   ];
 

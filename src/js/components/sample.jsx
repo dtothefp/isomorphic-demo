@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 import cx from 'classnames';
-import styles from './local.css';
 
 export default class Hello extends Component {
   static propTypes = {
@@ -25,6 +24,7 @@ export default class Hello extends Component {
     }, 2000);
   }
   render() {
+    const styles = require('./local.css');
     let classes = cx({
       'is-error': this.state.message === 'whatevss'
     });

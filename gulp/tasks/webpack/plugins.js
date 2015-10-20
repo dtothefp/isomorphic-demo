@@ -1,15 +1,12 @@
 import {join} from 'path';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import webpack from 'webpack';
-import statsPlugin from './stats-plugin';
 import WebpackIsomorphicToolsPlugin from 'webpack-isomorphic-tools/plugin';
 import ismorphicToolsConfig from './webpack-isomorphic-tools';
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(ismorphicToolsConfig);
 
 export default function(opts) {
   const {
-    app,
-    environment,
     file,
     isMainTask,
     paths,
@@ -20,7 +17,6 @@ export default function(opts) {
     TEST
   } = opts;
   const {scriptDir} = sources;
-  const {shouldRev} = environment;
   const {cssBundleName, jsBundleName} = paths;
   const {CommonsChunkPlugin} = webpack.optimize;
 
@@ -69,10 +65,6 @@ export default function(opts) {
 
     if (isMainTask) {
       plugins.push(...commons, webpackIsomorphicToolsPlugin.development(DEBUG));
-    }
-
-    if (shouldRev) {
-      prodPlugins.push(statsPlugin(app));
     }
 
     if (!DEBUG || !TEST) {

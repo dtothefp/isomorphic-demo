@@ -16,9 +16,9 @@ export default function(gulp, plugins, config) {
       src = [addbase(testDir, '**/*.js')];
     } else if (lintEnv === 'build') {
       src = [
+        addbase('app/**/*.js'),
         addbase(taskDir, '**/*.js'),
-        addbase('gulpfile.babel.js'),
-        '!' + addbase(taskDir, 'tasks/selenium/wdio-config/*.js')
+        addbase('gulpfile.babel.js')
       ];
     }
 

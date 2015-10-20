@@ -1,8 +1,7 @@
 export default function(gulp, plugins, config) {
   const {browserSync} = plugins;
-  const {ENV, sources, utils} = config;
-  const {devHost, expressPort, devPort, buildDir} = sources;
-  const {addbase} = utils;
+  const {ENV, sources} = config;
+  const {devHost, expressPort, devPort} = sources;
 
   return (cb) => {
     const config = {
@@ -27,8 +26,9 @@ export default function(gulp, plugins, config) {
         port: devPort
       },
       production: {
-        server: {
-          baseDir: addbase(buildDir),
+        proxy: {
+          target: `${devHost}:${expressPort}`,
+          ws: true,
           middleware: [
             (req, res, next) => {
               res.setHeader('Access-Control-Allow-Origin', '*');
