@@ -5,7 +5,7 @@
 #### Get Started
 ```sh
 gulp watch //dev build `NODE_ENV="development"`
-gulp build
+gulp build //dev build `NODE_ENV="production"` => pass flag -q to omit minification
 ```
 
 #### Test

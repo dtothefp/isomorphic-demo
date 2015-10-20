@@ -4,8 +4,7 @@ import ReactDOM from 'react-dom/server';
 import React from 'react';
 
 export default function(config) {
-  const {sources, utils} = config;
-  const {buildDir, srcDir} = sources;
+  const {utils} = config;
   const {addbase} = utils;
 
   function _transform(data) {

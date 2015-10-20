@@ -1,16 +1,14 @@
-/*eslint-disable*/
 import Express from 'express';
-import {assign, isFunction, isUndefined} from 'lodash';
+import {assign, isFunction} from 'lodash';
 import webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
 import makeConfig from './make-webpack-config';
 
 export default function(gulp, plugins, config) {
   const {sources, utils, environment} = config;
-  const {isDev, asset_path, isCi} = environment;
+  const {isDev} = environment;
   const {addbase, getTaskName} = utils;
   const {mainBundleName, buildDir, hotPort, devPort, devHost} = sources;
-  const {gutil, app} = plugins;
+  const {gutil} = plugins;
 
   return (cb) => {
     const app = new Express();
@@ -21,10 +19,10 @@ export default function(gulp, plugins, config) {
 
     if (isMainTask) {
       /*eslint-disable */
-      publicPath = isCi ? `${asset_path}/` : `${devPath}/`;
+      publicPath = isDev ?  `${devPath}/` : `/`;
       /*eslint-enable */
     } else {
-      publicPath = isCi ? `${asset_path}/` : `http://${devHost}:${devPort}`;
+      publicPath = isDev ? `http://${devHost}:${devPort}` : `/`;
     }
 
     const webpackConfig = makeConfig(assign({}, config, {isMainTask, publicPath, app}));
@@ -119,4 +117,3 @@ export default function(gulp, plugins, config) {
     }
   };
 }
-/*eslint-enable*/

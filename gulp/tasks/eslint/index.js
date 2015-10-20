@@ -16,10 +16,9 @@ export default function(gulp, plugins, config) {
       src = [addbase(testDir, '**/*.js')];
     } else if (lintEnv === 'build') {
       src = [
-        addbase('{bin,app}/**/*.js'),
+        addbase('app/**/*.js'),
         addbase(taskDir, '**/*.js'),
-        addbase('gulpfile.babel.js'),
-        addbase('server.babel.js')
+        addbase('gulpfile.babel.js')
       ];
     }
 

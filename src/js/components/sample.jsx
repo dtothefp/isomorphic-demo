@@ -25,9 +25,6 @@ export default class Hello extends Component {
   }
   render() {
     const styles = require('./local.css');
-    /*eslint-disable*/
-    console.log(styles);
-    /*eslint-enable*/
     let classes = cx({
       'is-error': this.state.message === 'whatevss'
     });

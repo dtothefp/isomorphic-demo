@@ -14,5 +14,5 @@ var WebpackIsomorphicTools = require('webpack-isomorphic-tools');
 var webpackIsomorphicTools = new WebpackIsomorphicTools(require('../gulp/tasks/webpack/webpack-isomorphic-tools'));
 
 webpackIsomorphicTools.development(__DEVELOPMENT__).server(rootDir).then(() => {
-  require('../app')({webpackIsomorphicTools, isDev: global.__DEVELOPMENT__});
+  require('../app')({webpackIsomorphicTools});
 });

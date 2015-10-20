@@ -6,7 +6,9 @@ export default function(gulp, plugins, config) {
   return (cb) => {
     nodemon({
       script: addbase('bin', 'server.js'),
-      env: {NODE_ENV: ENV}
+      env: {
+        NODE_ENV: ENV
+      }
     }).on('start', () => {
       if (typeof cb === 'function') {
         const gulpCb = cb;

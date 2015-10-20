@@ -7,8 +7,6 @@ const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(ismorphicT
 
 export default function(opts) {
   const {
-    app,
-    environment,
     file,
     isMainTask,
     paths,
@@ -19,7 +17,6 @@ export default function(opts) {
     TEST
   } = opts;
   const {scriptDir} = sources;
-  const {shouldRev} = environment;
   const {cssBundleName, jsBundleName} = paths;
   const {CommonsChunkPlugin} = webpack.optimize;
 

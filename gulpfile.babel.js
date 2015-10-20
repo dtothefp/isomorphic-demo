@@ -1,8 +1,7 @@
 import gulp from 'gulp';
 import {tasks, config, plugins as $} from './gulp/config/make-gulp-config';
 
-const {sources, utils, environment} = config;
-const {isDev} = environment;
+const {sources, utils} = config;
 const {buildDir, testDir, taskDir} = sources;
 const {addbase} = utils;
 
@@ -18,20 +17,12 @@ gulp.task('webpack', ['webpack:main', 'webpack:global']);
 gulp.task('karma', tasks.karma);
 
 gulp.task('build', (cb) => {
-  if (isDev) {
-    $.sequence(
-      ['clean', 'lint'],
-      'webpack',
-      'browser-sync',
-      cb
-    );
-  } else {
-    $.sequence(
-      ['clean', 'lint'],
-      'webpack',
-      cb
-    );
-  }
+  $.sequence(
+    ['clean', 'lint'],
+    'webpack',
+    'browser-sync',
+    cb
+  );
 });
 
 gulp.task('test:integration', (cb) => {
@@ -47,10 +38,9 @@ gulp.task('default', ['build']);
 gulp.task('watch', ['build'], () => {
   gulp.watch(addbase(buildDir, '{js/,css/}**/*.{js,css}'), $.browserSync.reload);
   gulp.watch([
-    addbase('{bin,app}/**/*.js'),
+    addbase('app/**/*.js'),
     addbase(taskDir, '**/*.js'),
     addbase('gulpfile.babel.js'),
-    addbase('server.babel.js'),
     addbase(testDir, '**/*.js')
   ], ['lint']);
 });

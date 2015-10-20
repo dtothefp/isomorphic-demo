@@ -1,4 +1,4 @@
-import {join} from 'path';
+import {merge} from 'lodash';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import shouldExclude from './exclude-list';
 
@@ -6,22 +6,23 @@ export default function(opts) {
   const {
     expose,
     extract,
+    isMainTask,
     libraryName,
     paths,
     sources,
     quick,
     DEBUG,
-    SERVER,
     TEST
   } = opts;
   const {fileLoader} = paths;
   const {includePaths} = sources;
-  let jsLoader = 'babel-loader?optional[]=runtime&stage=0';
-  let jsxLoader = [];
-  const jsxProdOpts = [
-    '&optional[]=optimisation.react.inlineElements',
-    'optional[]=optimisation.react.constantElements'
-  ];
+  const babelQuery = {
+    optional: ['runtime'],
+    stage: 0
+  };
+
+  let jsxLoader = 'babel-loader';
+  //let jsxLoader = [];
   let sassLoader, cssLoader;
 
   let jsonLoader = ['json-loader'];
@@ -40,13 +41,32 @@ export default function(opts) {
   sassParams.push('sourceMap', 'sourceMapContents=true');
 
   if (DEBUG || TEST) {
-    if (!TEST && !extract) {
-      jsxLoader.push('react-hot');
-    } else {
-      jsLoader += '&plugins=rewire';
-    }
+    const babelDevConfig = {
+      plugins: [
+        //'rewire',
+        'react-transform'
+      ],
+      extra: {
+        'react-transform': {
+          transforms:
+            [{
+              transform: 'react-transform-hmr',
+              imports: ['react'],
+              locals: ['module']
+            }]
+        }
+      }
+    };
 
-    jsxLoader.push(jsLoader);
+    //if (!TEST && !extract) {
+      //jsxLoader.push('react-hot');
+    //} else {
+      //jsLoader += '&plugins=rewire';
+    //}
+
+    if (isMainTask) {
+      merge(babelQuery, babelDevConfig);
+    }
 
     // TODO: clean this up
     if (extract) {
@@ -73,14 +93,13 @@ export default function(opts) {
       'css-loader?sourceMap&importLoaders=1&modules&localIdentName=[name]__[local]___[hash:base64:5]',
       'postcss-loader'
     ].join('!');
-  } else if (SERVER) {
-    const mockStylesLoader = join(__dirname, 'server-styles', 'style-collector') + '!css-loader';
-    cssLoader = mockStylesLoader;
-    sassLoader = mockStylesLoader;
-
-    jsxLoader.push(jsLoader);
   } else {
-    jsxLoader.push(jsLoader + jsxProdOpts.join('&'));
+    const babelProdOptional = [
+      'optimisation.react.inlineElements',
+      'optimisation.react.constantElements'
+    ];
+
+    babelQuery.optional.push(...babelProdOptional);
 
     cssLoader = ExtractTextPlugin.extract('style-loader', [
       'css-loader?sourceMap&importLoaders=1&modules&localIdentName=[hash:base64:5]',
@@ -106,7 +125,8 @@ export default function(opts) {
     {
       test: /\.jsx?$/,
       exclude: shouldExclude,
-      loaders: jsxLoader
+      loader: jsxLoader,
+      query: babelQuery
     },
     {
       test: /\.(jpe?g|gif|png|ico|ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,

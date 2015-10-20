@@ -7,8 +7,8 @@ export default function({nunjucks, app}) {
   paths.forEach((fp) => {
     if (!/index/.test(fp)) {
       const tagName = path.basename(fp, path.extname(fp)).replace('-', '_');
-      const mod = require(`./${fp}`);
-      nunjucks.addExtension(tagName, new mod(app));
+      const Mod = require(`./${fp}`);
+      nunjucks.addExtension(tagName, new Mod(app));
     }
   });
 }
