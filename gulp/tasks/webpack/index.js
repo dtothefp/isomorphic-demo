@@ -18,9 +18,7 @@ export default function(gulp, plugins, config) {
     const devPath = `http://${devHost}:${hotPort}`;
 
     if (isMainTask) {
-      /*eslint-disable */
       publicPath = isDev ?  `${devPath}/` : `/`;
-      /*eslint-enable */
     } else {
       publicPath = isDev ? `http://${devHost}:${devPort}` : `/`;
     }
