@@ -12,60 +12,77 @@ import loader from 'assemble-loader';
 import nunjucks from 'nunjucks';
 import consolidate from 'consolidate';
 import jsxLoader from './lib/jsx-loader';
+import addTags from './tags';
 
 export default function({webpackIsomorphicTools, isDev}) {
   const config = makeConfig({ENV: 'development'});
-  const {sources} = config;
+  const {sources, environment, utils} = config;
+  const {srcDir} = sources;
+  const {addbase} = utils;
   const {expressPort} = sources;
   const pretty = new PrettyError();
   const app = new Express();
   const server = new http.Server(app);
   const assemble = new Assemble();
 
-  nunjucks.configure({
+  const instance = nunjucks.configure({
     watch: false,
     noCache: true
   });
 
-  assemble.data(config);
+  addTags({nunjucks: instance, app: assemble});
+
+  assemble.data({
+    environment,
+    utils,
+    layouts(fp) {
+      return `${addbase(srcDir, 'templates/layouts', fp)}.html`;
+    }
+  });
 
   assemble.engine('.html', consolidate.nunjucks);
   assemble.create('pages', {renameKey: function (fp) {
-    return path.basename(fp, path.extname(fp));
+    const dirname = path.dirname(fp).split('/').slice(-1)[0];
+    const basename = path.basename(fp).split('.').slice(0)[0];
+    return `${dirname}/${basename}`;
   }})
   .use(loader());
 
   assemble.pages('./src/templates/pages/*.html');
 
   assemble.create('snippets', {viewType: 'partial', renameKey: function (fp) {
-      return path.basename(fp, path.extname(fp));
+      const dirname = path.dirname(fp).split('/').slice(-1)[0];
+      const basename = path.basename(fp).split('.').slice(0)[0];
+      return `${dirname}/${basename}`;
     }})
     .use(jsxLoader(config));
 
   app.use((req, res, next) => {
-    console.log('here');
     if (isDev) {
       // Do not cache webpack stats: the script file would change since
       // hot module replacement is enabled in the development env
       webpackIsomorphicTools.refresh();
     }
 
-    let componentProps = {
+    const snippetId = req.query.snippetId;
+    const componentProps = {
       userName: 'DFP'
     };
-    let snippetId = req.params.snippetId;
-    assemble.snippets.load(['./src/js/components/${snippetId}.jsx'], {}, componentProps, function (err) {
+
+    assemble.snippets.load([`./src/js/components/${snippetId}.jsx`], {}, componentProps, function (err) {
       if (err) return next(err);
 
-      var page = assemble.pages.getView('index');
-      page.render({snippetId}, function (err, view) {
+      var page = assemble.pages.getView('pages/index');
+      page.render({
+        snippetId,
+        assets: webpackIsomorphicTools.assets(),
+      }, function (err, view) {
         if (err) return next(err);
-        write('dest/path', view.content, done);
+        res.send(view.content);
       });
     });
   });
 
-  console.log('PORt', expressPort);
   if (expressPort) {
     server.listen(expressPort, (err) => {
       if (err) {
