@@ -18,7 +18,7 @@ export default class Html extends Component {
 
   render() {
     const {assets, component} = this.props;
-    const content = component ? ReactDOM.renderToString(component) : '';
+    console.log('COMPONENT', component);
 
     return (
       <html lang="en-us">
@@ -32,7 +32,7 @@ export default class Html extends Component {
         </head>
         <body>
           <h1>Hello</h1>
-          <div id="content" data-react dangerouslySetInnerHTML={{__html: content}}/>
+          <div id="content" data-react dangerouslySetInnerHTML={{__html: component}}/>
           <script src={assets.javascript.vendors}/>
           <script src={assets.javascript.main}/>
         </body>
