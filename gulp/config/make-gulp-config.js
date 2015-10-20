@@ -2,7 +2,6 @@ import {readdirSync as read, statSync as stat, existsSync as exists} from 'fs';
 import _ from 'lodash';
 import path, {join} from 'path';
 import gulp from 'gulp';
-import assemble from 'assemble';
 import yargs from 'yargs';
 import pluginFn from 'gulp-load-plugins';
 import makeConfig from './';
@@ -76,7 +75,7 @@ if (config.file) {
   process.env.TEST_FILE = config.file;
 }
 
-const plugins = _.assign({}, pluginFn({
+const plugins = pluginFn({
   lazy: false,
   pattern: [
     'gulp-*',
@@ -90,7 +89,7 @@ const plugins = _.assign({}, pluginFn({
     'run-sequence': 'sequence',
     'gulp-if': 'gulpIf'
   }
-}), {app: assemble()});
+});
 
 /**
  * Reqires all gulp tasks passing the `gulp` object, all `plugins` and `config` object

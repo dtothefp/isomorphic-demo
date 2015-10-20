@@ -6,8 +6,8 @@ import makeConfig from './make-webpack-config';
 export default function(gulp, plugins, config) {
   const {sources, utils, environment} = config;
   const {isDev} = environment;
-  const {addbase, getTaskName} = utils;
-  const {mainBundleName, buildDir, hotPort, devPort, devHost} = sources;
+  const {getTaskName} = utils;
+  const {mainBundleName, hotPort, devPort, devHost, expressPort} = sources;
   const {gutil} = plugins;
 
   return (cb) => {
@@ -90,7 +90,7 @@ export default function(gulp, plugins, config) {
     if (isDev) {
       if (isMainTask) {
         const serverOptions = {
-          contentBase: addbase(buildDir),
+          contentBase: `http://${devHost}:${expressPort}`,
           quiet: true,
           noInfo: true,
           hot: true,

@@ -1,3 +1,4 @@
+import './server.babel';
 import gulp from 'gulp';
 import {tasks, config, plugins as $} from './gulp/config/make-gulp-config';
 
