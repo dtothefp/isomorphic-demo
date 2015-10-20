@@ -4,10 +4,8 @@ import shouldExclude from './exclude-list';
 
 export default function(opts) {
   const {
-    expose,
     extract,
     isMainTask,
-    libraryName,
     paths,
     sources,
     quick,
@@ -21,13 +19,11 @@ export default function(opts) {
     stage: 0
   };
 
-  let jsxLoader = 'babel-loader';
-  //let jsxLoader = [];
+  const jsxLoader = 'babel-loader';
+  const jsonLoader = 'json-loader';
   let sassLoader, cssLoader;
 
-  let jsonLoader = ['json-loader'];
-
-  let sassParams = [
+  const sassParams = [
     `outputStyle=${DEBUG || quick ? 'expanded' : 'compressed'}`
   ];
 
@@ -43,8 +39,8 @@ export default function(opts) {
   if (DEBUG || TEST) {
     const babelDevConfig = {
       plugins: [
-        //'rewire',
-        'react-transform'
+        'react-transform',
+        'rewire'
       ],
       extra: {
         'react-transform': {
@@ -57,12 +53,6 @@ export default function(opts) {
         }
       }
     };
-
-    //if (!TEST && !extract) {
-      //jsxLoader.push('react-hot');
-    //} else {
-      //jsLoader += '&plugins=rewire';
-    //}
 
     if (isMainTask) {
       merge(babelQuery, babelDevConfig);
@@ -84,10 +74,6 @@ export default function(opts) {
       ].join('!');
     }
 
-    //cssLoader = ExtractTextPlugin.extract('style-loader', [
-      //'css-loader?sourceMap&importLoaders=1&modules&localIdentName=[name]__[local]___[hash:base64:5]',
-      //'postcss-loader'
-    //].join('!'));
     cssLoader = [
       'style-loader',
       'css-loader?sourceMap&importLoaders=1&modules&localIdentName=[name]__[local]___[hash:base64:5]',
@@ -121,7 +107,7 @@ export default function(opts) {
     }
   ];
 
-  let loaders = [
+  const loaders = [
     {
       test: /\.jsx?$/,
       exclude: shouldExclude,
@@ -150,13 +136,6 @@ export default function(opts) {
     loaders.push({
       test: require.resolve('sinon'),
       loader: 'imports?define=>false'
-    });
-  }
-
-  if (DEBUG || TEST) {
-    loaders.unshift({
-      expose,
-      loader: `expose?${libraryName}`
     });
   }
 
