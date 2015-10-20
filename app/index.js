@@ -10,10 +10,10 @@ import jsxLoader from './lib/jsx-loader';
 import addTags from './tags';
 
 export default function({webpackIsomorphicTools}) {
-  const {NODE_ENV, BS_ACTIVE} = process.env;
+  const {NODE_ENV} = process.env;
   const config = makeConfig({ENV: NODE_ENV});
   const {sources, environment, utils} = config;
-  const {srcDir, buildDir, devHost, devPort, expressPort} = sources;
+  const {srcDir, buildDir, expressPort} = sources;
   const {isDev} = environment;
   const {addbase} = utils;
   const app = new Express();
@@ -81,15 +81,7 @@ export default function({webpackIsomorphicTools}) {
       if (err) {
         console.error(err);
       }
-      const open = require('open');
-      const protocol = 'http://';
-      const devPath = `${protocol}${devHost}:${devPort}`;
-      const expressPath = `${protocol}${devHost}:${expressPort}`;
-
       console.info('==> 💻  Open http://localhost:%s in a browser to view the app.', expressPort);
-      process.nextTick(() => {
-        BS_ACTIVE ? open(devPath) : open(expressPath);
-      });
     });
   } else {
     console.error('==>     ERROR: No PORT environment variable has been specified');

@@ -2,8 +2,9 @@ import './server.babel';
 import gulp from 'gulp';
 import {tasks, config, plugins as $} from './gulp/config/make-gulp-config';
 
-const {sources, utils} = config;
+const {sources, utils, environment} = config;
 const {buildDir, testDir, taskDir} = sources;
+const {isDev} = environment;
 const {addbase} = utils;
 
 gulp.task('browser-sync', ['nodemon'], tasks.browserSync);
@@ -18,12 +19,20 @@ gulp.task('webpack', ['webpack:main', 'webpack:global']);
 gulp.task('karma', tasks.karma);
 
 gulp.task('build', (cb) => {
-  $.sequence(
-    ['clean', 'lint'],
-    'webpack',
-    'browser-sync',
-    cb
-  );
+  if (isDev) {
+    $.sequence(
+      ['clean', 'lint'],
+      'webpack',
+      'browser-sync',
+      cb
+    );
+  } else {
+    $.sequence(
+      ['clean', 'lint'],
+      'webpack',
+      cb
+    );
+  }
 });
 
 gulp.task('test:integration', (cb) => {
